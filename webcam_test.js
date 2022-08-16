@@ -23,24 +23,33 @@ function askForPermission(){
 }
 
 
+/** @type {HTMLSelectElement} */
+let cameraSelect
 document.addEventListener('DOMContentLoaded', () => {
-    askForPermission();
+	cameraSelect = document.querySelector('#camera-select')
+	askForPermission();
+	cameraSelect.onchange = () => {
+		// console.log("New selection!")
+		/** @type {HTMLOptionElement} */
+		let new_selection = cameraSelect.children[
+			cameraSelect.selectedIndex
+		];
+		selectedCamera = new_selection.value;
+		setCamera();
+	};
 
-		document.querySelector('#camera-select').onchange = () => {
-			// console.log("New selection!")
-			let new_selection = document.querySelector('#camera-select').children[
-				document.querySelector('#camera-select').selectedIndex
-			].value;
-			selectedCamera = new_selection;
-			console.log(selectedCamera);
-			setCamera();
-	    };
-
+	/** @type {HTMLButtonElement} */
+	const hideButton = document.querySelector('#camera-select-hide');
+	hideButton.onclick = () => {
+		/** @type {HTMLDivElement} */
+		const container = document.querySelector('#camera-select-container');
+		container.style.display = 'none';
+	}
 	//     populateCameraList();
 });
 
 function populateCameraList() {
-	document.querySelector('#camera-select').innerHTML = '';
+	cameraSelect.innerHTML = '';
 
 	navigator.mediaDevices.enumerateDevices().then((deviceList) => {
 		console.log(deviceList);
@@ -55,7 +64,7 @@ function populateCameraList() {
 				// item.setAttribute("value", device.label);
 				item.value = device.deviceId;
 				item.innerHTML = device.label;
-				document.querySelector('#camera-select').appendChild(item);
+				cameraSelect.appendChild(item);
 			}
 		});
 	});
@@ -69,6 +78,7 @@ function setCamera() {
 	};
 
 	navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+		/** @type {HTMLVideoElement} */
 		let video = document.querySelector('#webcam-output');
 		video.srcObject = stream;
 		video.play();

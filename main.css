@@ -1,6 +1,20 @@
-#webcam-output, #camera-select{
+html, body {
+    margin: 0;
+}
+
+body {
+    background-color: black;
+    display: flex;
+}
+
+#webcam-output {
+    width: 100%;
+}
+#camera-select-container {
     display: block;
-    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 h1{
